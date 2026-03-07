@@ -36,7 +36,17 @@ function resetAndLoad(data) {
   let mn = document.getElementById("main");
   if (mn) mn.innerHTML = "";
   displayedTotal = 0;
+  // Load initial batches until the scrollbar appears or data runs out
+  loadInitialBatches();
+}
+
+function loadInitialBatches() {
   loadMore();
+  // If the window is still not scrollable and we have more data, load another batch
+  if (displayedTotal < jsonD.length && document.documentElement.scrollHeight <= window.innerHeight) {
+    // We use a tiny timeout to let the browser render the previous batch and update scrollHeight
+    setTimeout(loadInitialBatches, 50);
+  }
 }
 
 function loadMore() {
@@ -72,7 +82,12 @@ function loadMore() {
 
 // Scroll listener for infinite scroll
 window.onscroll = function () {
-  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
+  // Use documentElement.scrollHeight for better desktop compatibility
+  const scrollHeight = document.documentElement.scrollHeight;
+  const scrollPos = window.innerHeight + window.scrollY;
+
+  // If we are within 800px of the bottom, load more
+  if (scrollPos >= scrollHeight - 800) {
     loadMore();
   }
 };
