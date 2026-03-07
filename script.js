@@ -145,7 +145,7 @@ function navbar() {
 
   const data = `
     <div class="navbar-brand">
-      <a class="navbar-item title is-5 mb-0" href="./">CAM_VIEW</a>
+      <a class="navbar-item title is-5 mb-0" href="./">Camera</a>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" onclick="this.classList.toggle('is-active'); document.getElementById('navbarMenu').classList.toggle('is-active');">
         <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
       </a>

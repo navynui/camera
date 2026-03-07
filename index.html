@@ -8,9 +8,24 @@
   <meta http-equiv="cache-control" content="no-cache" />
   <meta http-equiv="expires" content="180" />
   <link rel="icon" href="favicon.png" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="favicon.png">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css">
-  <link href="style.css?v=mobile_v6" rel="stylesheet" />
-  <script type="text/javascript" src="script.js?v=mobile_v6"></script>
+  <link href="style.css?v=mobile_v8" rel="stylesheet" />
+  <script type="text/javascript" src="script.js?v=mobile_v8"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW registered'))
+          .catch(err => console.log('SW error:', err));
+      });
+    }
+  </script>
 
 <body class="has-navbar-fixed-top" onload="loaddata()">
   <nav id="navigate" class="navbar is-fixed-top is-dark px-4" role="navigation" aria-label="main navigation"></nav>
