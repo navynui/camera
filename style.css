@@ -1,85 +1,138 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&display=swap");
 
 :root {
-  --primary-color: #00d1b2;
-  --bg-dark: #0a0a0a;
-  --card-bg: #1a1a1a;
-  --text-dim: #b5b5b5;
-  /* Bulma 1.0.2 Variables */
-  --bulma-primary: var(--primary-color);
-  --bulma-body-background-color: var(--bg-dark);
+  --primary: #00d1b2;
+  --bg: #000;
+  --surface: #121212;
+  --surface-2: #1e1e1e;
+  --text: #ffffff;
+  --text-dim: #a0a0a0;
+  --font-family: 'Kanit', sans-serif;
+  --radius: 12px;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: var(--bg-dark);
-  color: #fff;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  font-family: var(--font-family);
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Bulma Overrides */
 .navbar {
-  backdrop-filter: blur(10px);
-  background-color: rgba(10, 10, 10, 0.8) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-item.title {
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .card {
-  background-color: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  transition: var(--transition);
   height: 100%;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  transform: translateY(-4px);
+  background-color: var(--surface-2);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.card-image figure {
+  margin: 0;
 }
 
 .card-image img {
-  transition: opacity 0.3s ease;
+  border-radius: var(--radius) var(--radius) 0 0;
+  filter: grayscale(20%);
+  transition: var(--transition);
 }
 
 .card:hover .card-image img {
-  opacity: 0.8;
+  filter: grayscale(0%);
+}
+
+.card-content {
+  background: var(--surface);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 #timeline {
-  padding: 0.75rem;
-  background: rgba(26, 26, 26, 0.9);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 2rem;
+  padding: 1.25rem 0.75rem;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 40vh;
+  overflow-y: auto;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
 }
 
-.media-container {
-  padding-top: 1rem;
+.tags.is-centered {
+  justify-content: center;
 }
 
 .tag {
-  transition: all 0.2s ease;
+  font-family: var(--font-family) !important;
+  border-radius: 6px !important;
+  font-weight: 400;
+  background-color: var(--surface-2) !important;
+  color: var(--text-dim) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-.tag:hover {
-  filter: brightness(1.2);
+.tag.is-primary {
+  background-color: var(--primary) !important;
+  color: #000 !important;
+  border: none !important;
+}
+
+.tag.is-dark {
+  background-color: #000 !important;
+  color: var(--primary) !important;
+}
+
+.media-container {
+  padding-bottom: 150px;
+  /* Space for fixed timeline */
+}
+
+/* Modern Select Styling */
+.select select {
+  background-color: var(--surface-2) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-family: var(--font-family) !important;
+}
+
+.select:after {
+  border-color: var(--primary) !important;
+}
+
+/* Mobile Adjustments */
+@media screen and (max-width: 768px) {
+  .section {
+    padding: 1rem 0.5rem;
+  }
+
+  .navbar-brand {
+    padding-left: 0.5rem;
+  }
 }
 
 
@@ -87,6 +140,6 @@ body {
 /* Hide navigation until loaded but keep space to prevent layout shift */
 #navigate:empty {
   min-height: 52px;
-  background-color: var(--bg-dark);
+  background-color: var(--bg);
   visibility: hidden;
 }

@@ -41,7 +41,7 @@ function save(json) {
 
 function timebar(json) {
   let all = json.length;
-  let data = '<div class="tags are-small is-multiline">';
+  let data = '<div class="tags are-small is-multiline is-centered">';
   let timeline = document.getElementById("timeline");
   if (!timeline) return;
 
@@ -55,10 +55,10 @@ function timebar(json) {
 
     if (hour != showhour || date != showdate) {
       if (date != showdate) {
-        data += `<span class='tag is-dark is-uppercase ml-2'><strong>${date.replace(/ /g, ".")}</strong></span>`;
+        data += `<span class='tag is-dark is-uppercase mx-1 my-1'><strong>${date.replace(/ /g, ".")}</strong></span>`;
         showdate = date;
       }
-      data += `<a class='tag is-primary is-light mx-0' href='javascript:choose(${vdate},${hour})'>${hour}</a>`;
+      data += `<a class='tag is-primary mx-1 my-1' href='javascript:choose(${vdate},${hour})'>${hour}:00</a>`;
       menu.push({ d: date, h: hour });
       showhour = hour;
     }
@@ -95,33 +95,28 @@ function navbar() {
     }
 
     startHtml += `
-      <div class="navbar-item py-0 px-1">
-        <div class="field mb-0">
-          <div class="control">
-            <div class="select is-small is-rounded is-primary">
-              <select onchange="schoose(this.value)">${options}</select>
-            </div>
-          </div>
+      <div class="navbar-item py-1 px-1">
+        <div class="select is-small is-rounded">
+          <select onchange="schoose(this.value)">${options}</select>
         </div>
       </div>`;
   }
 
   const data = `
     <div class="navbar-brand">
-      <a class="navbar-item title is-5 mb-0" href="./">Camera</a>
+      <a class="navbar-item title is-5 mb-0" href="./">CAM_VIEW</a>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" onclick="this.classList.toggle('is-active'); document.getElementById('navbarMenu').classList.toggle('is-active');">
         <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
       </a>
     </div>
     <div id="navbarMenu" class="navbar-menu">
-      <div class="navbar-start" style="flex-wrap: wrap; align-items: center; justify-content: flex-start;">
+      <div class="navbar-start" style="flex-wrap: wrap; align-items: center; justify-content: flex-start; padding: 0.5rem;">
         ${startHtml}
       </div>
       <div class="navbar-end">
         <div class="navbar-item px-2">
           <div class="buttons field is-grouped mb-0">
-            <div class="control"><a class="button is-small is-info is-light" href="../">Links</a></div>
-            <div class="control"><a class="button is-small is-primary is-light" href="javascript:location.reload()">Reload</a></div>
+            <div class="control"><a class="button is-small is-primary is-outlined" href="javascript:location.reload()">REFRESH</a></div>
           </div>
         </div>
       </div>
@@ -137,6 +132,8 @@ function choose(d, h) {
     return dt.getHours() == h && dt.getDate() == d;
   });
   process(filterJ, filterJ.length);
+  // Auto scroll to top when choosing
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function process(json, num) {
@@ -158,8 +155,8 @@ function process(json, num) {
               </figure>
             </a>
           </div>
-          <div class="card-content p-1">
-            <p class="is-size-7 has-text-centered has-text-grey">${caption}</p>
+          <div class="card-content p-3 has-text-centered">
+            <p class="is-size-7 has-text-grey-light" style="letter-spacing: 0.05em;">${caption}</p>
           </div>
         </div>
       </div>`;
