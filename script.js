@@ -20,52 +20,62 @@ function dtest() {
   if (dbg) dbg.innerHTML = info;
 }
 
+var displayedTotal = 0;
+const PAGE_SIZE = 12;
+
 function loaddata() {
-  menu = []; // Clear global menu
   fetch("./data.json")
     .then((response) => response.json())
-    .then((json) => save(json));
+    .then((json) => {
+      jsonD = json;
+      resetAndLoad(jsonD);
+    });
 }
 
-function save(json) {
-  jsonD = json;
-  let w = window.innerWidth;
-  if (w >= 2215) process(jsonD, 24);
-  else if (w >= 1845) process(jsonD, 15);
-  else if (w >= 1480) process(jsonD, 12);
-  else process(jsonD, 6);
-
-  timebar(jsonD);
-  navbar();
+function resetAndLoad(data) {
+  let mn = document.getElementById("main");
+  if (mn) mn.innerHTML = "";
+  displayedTotal = 0;
+  loadMore();
 }
 
-function timebar(json) {
-  let all = json.length;
-  let data = '<div class="tags are-small is-multiline is-centered">';
-  let timeline = document.getElementById("timeline");
-  if (!timeline) return;
+function loadMore() {
+  if (displayedTotal >= jsonD.length) return;
 
-  let showhour = -1;
-  let showdate = "";
-  for (let i = all - 1; i >= 0; i--) {
-    let da = new Date(json[i].dt);
-    let date = da.toString().substring(0, 10);
-    let vdate = da.getDate();
-    let hour = da.getHours();
+  let end = jsonD.length - 1 - displayedTotal;
+  let start = Math.max(0, end - PAGE_SIZE + 1);
 
-    if (hour != showhour || date != showdate) {
-      if (date != showdate) {
-        data += `<span class='tag is-dark is-uppercase mx-1 my-1'><strong>${date.replace(/ /g, ".")}</strong></span>`;
-        showdate = date;
-      }
-      data += `<a class='tag is-primary mx-1 my-1' href='javascript:choose(${vdate},${hour})'>${hour}:00</a>`;
-      menu.push({ d: date, h: hour });
-      showhour = hour;
-    }
+  for (let i = end; i >= start; i--) {
+    let thm = "thumbs/aqara_video/" + jsonD[i].camera + "/" + jsonD[i].path + ".png";
+    let vid = "files/aqara_video/" + jsonD[i].camera + "/" + jsonD[i].path + ".mp4";
+    let caption = jsonD[i].dt;
+    let text = `
+      <div class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet">
+        <div class="card">
+          <div class="card-image">
+            <a href="${vid}">
+              <figure class="image is-16by9">
+                <img src="${thm}" alt="Thumbnail" style="object-fit: cover;">
+              </figure>
+            </a>
+          </div>
+          <div class="card-content p-3 has-text-centered">
+            <p class="is-size-7 has-text-grey-light" style="letter-spacing: 0.05em;">${caption}</p>
+          </div>
+        </div>
+      </div>`;
+    addli(text);
   }
-  data += "</div>";
-  timeline.innerHTML = data;
+  displayedTotal += (end - start + 1);
+  navbar(); // Update navbar info if needed
 }
+
+// Scroll listener for infinite scroll
+window.onscroll = function () {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
+    loadMore();
+  }
+};
 
 function schoose(val) {
   let a = val.split("*")[0];
@@ -77,8 +87,24 @@ function navbar() {
   const navline = document.getElementById("navigate");
   if (!navline) return;
 
+  // Re-generate menu from full jsonD for navigation
+  const tempMenu = [];
+  let showhour = -1;
+  let showdate = "";
+  for (let i = jsonD.length - 1; i >= 0; i--) {
+    let da = new Date(jsonD[i].dt);
+    let date = da.toString().substring(0, 10);
+    let vdate = da.getDate();
+    let hour = da.getHours();
+    if (hour != showhour || date != showdate) {
+      tempMenu.push({ d: date, h: hour });
+      showhour = hour;
+      showdate = date;
+    }
+  }
+
   const days = {};
-  menu.forEach(item => {
+  tempMenu.forEach(item => {
     if (!days[item.d]) days[item.d] = [];
     if (!days[item.d].includes(item.h)) days[item.d].push(item.h);
   });
@@ -131,20 +157,20 @@ function choose(d, h) {
     let dt = new Date(obj.dt);
     return dt.getHours() == h && dt.getDate() == d;
   });
-  process(filterJ, filterJ.length);
-  // Auto scroll to top when choosing
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function process(json, num) {
+  // Note: Infinity scroll is primarily for "All" view. 
+  // For filtered view, we can just render everything or still use loadMore.
+  // Let's make choose reset the current view to the filtered set.
+  jsonD_filtered = filterJ;
+  // To keep it simple, I'll temporarily swap jsonD and restore it? 
+  // No, let's just render the filtered set directly since it's usually small.
   let mn = document.getElementById("main");
-  if (!mn) return;
-  mn.innerHTML = "";
-  let size = json.length;
-  for (let i = size - 1; i >= Math.max(0, size - num); i--) {
-    let thm = "thumbs/aqara_video/" + json[i].camera + "/" + json[i].path + ".png";
-    let vid = "files/aqara_video/" + json[i].camera + "/" + json[i].path + ".mp4";
-    let caption = json[i].dt;
+  if (mn) mn.innerHTML = "";
+
+  // Reuse process logic for simple filtered view
+  for (let i = filterJ.length - 1; i >= 0; i--) {
+    let item = filterJ[i];
+    let thm = "thumbs/aqara_video/" + item.camera + "/" + item.path + ".png";
+    let vid = "files/aqara_video/" + item.camera + "/" + item.path + ".mp4";
     let text = `
       <div class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet">
         <div class="card">
@@ -156,12 +182,14 @@ function process(json, num) {
             </a>
           </div>
           <div class="card-content p-3 has-text-centered">
-            <p class="is-size-7 has-text-grey-light" style="letter-spacing: 0.05em;">${caption}</p>
+            <p class="is-size-7 has-text-grey-light" style="letter-spacing: 0.05em;">${item.dt}</p>
           </div>
         </div>
       </div>`;
     addli(text);
   }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function addli(data) {
