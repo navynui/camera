@@ -1,27 +1,10 @@
 var jsonD = [],
   menu = [];
-var jsonD = [],
-  menu = [];
 var LS = localStorage;
 // Manual YYYY-MM-DD to avoid any locale/timezone weirdness
 var d = new Date();
 var tday = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
 var lc = 0;
-
-
-
-var hex_chr = "0123456789abcdef".split("");
-if (md5("hello") != "5d41402abc4b2a76b9719d911017c592") {
-  function add32(e, t) {
-    var n = (e & 65535) + (t & 65535),
-      r = (e >> 16) + (t >> 16) + (n >> 16);
-    return (r << 16) | (n & 65535);
-  }
-}
-
-
-
-
 
 function inIframe() {
   try {
@@ -35,11 +18,6 @@ function dtest() {
   let info = "iFrame:" + inIframe() + " userAgent:" + navigator.userAgent;
   let dbg = document.getElementById("debug");
   if (dbg) dbg.innerHTML = info;
-}
-
-function nodata() {
-  let mn = document.getElementById("main");
-  if (mn) mn.innerHTML = '<div class="column is-6"><div class="notification is-danger is-light has-text-centered">Incorrect Password.</div></div>';
 }
 
 function loaddata() {
