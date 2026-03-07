@@ -82,67 +82,7 @@ body {
   filter: brightness(1.2);
 }
 
-/* Password Popup - Modernized */
-#pswinput {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 1000;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(5px);
-}
 
-.contain {
-  position: relative;
-  height: 200px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.cloud {
-  position: relative;
-  z-index: 100;
-  filter: drop-shadow(0 0 20px var(--primary-color));
-  text-align: center;
-}
-
-.cloud h2 {
-  color: var(--primary-color);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.drop {
-  position: absolute;
-  top: 60px;
-  color: var(--primary-color);
-  transform-origin: bottom;
-  pointer-events: none;
-  animation: animate linear forwards;
-}
-
-@keyframes animate {
-  0% {
-    transform: translateY(0) scaleY(0);
-    opacity: 0;
-  }
-
-  20% {
-    transform: translateY(0) scaleY(1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateY(300px) scaleY(0);
-    opacity: 0;
-  }
-}
 
 /* Hide navigation until loaded but keep space to prevent layout shift */
 #navigate:empty {

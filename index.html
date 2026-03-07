@@ -10,10 +10,9 @@
   <link rel="icon" href="favicon.png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css">
   <link href="style.css?v=mobile_v3" rel="stylesheet" />
-  <script type="text/javascript" src="mhelper.js"></script>
   <script type="text/javascript" src="script.js?v=mobile_v3"></script>
 
-<body class="has-navbar-fixed-top" onload="recall()">
+<body class="has-navbar-fixed-top" onload="loaddata()">
   <nav id="navigate" class="navbar is-fixed-top is-dark px-4" role="navigation" aria-label="main navigation"></nav>
 
   <section class="section media-container">
@@ -23,19 +22,7 @@
     </div>
   </section>
 
-  <div id="pswinput" class="fpopup">
-    <div class="contain">
-      <div class="cloud">
-        <h2 class="title is-4">Media Locked</h2>
-      </div>
-    </div>
-    <div class="field has-addons is-justify-content-center mt-4">
-      <div class="control">
-        <input class="input is-medium is-rounded" type="password" placeholder="Enter password" id="psw" required
-          autofocus onkeydown="return chkkey(event)" />
-      </div>
-    </div>
-  </div>
+
 </body>
 
 </html>

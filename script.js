@@ -1,33 +1,14 @@
 var jsonD = [],
   menu = [];
-var user = "",
-  intv,
-  LS = localStorage;
+var jsonD = [],
+  menu = [];
+var LS = localStorage;
 // Manual YYYY-MM-DD to avoid any locale/timezone weirdness
 var d = new Date();
 var tday = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
 var lc = 0;
 
-function gldt(u) {
-  if (u == 142857142857) return md5(st2hx(tday));
-  else return tday;
-}
 
-function chk(inp) {
-  if (
-    inp != "" &&
-    inp != null &&
-    md5(inp) == "f4c403a72934a24d0e608eacc67686dc"
-  ) {
-    user = gldt(142857142857);
-    lc = 0;
-    return true;
-  } else if (inp == md5(st2hx(tday))) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 var hex_chr = "0123456789abcdef".split("");
 if (md5("hello") != "5d41402abc4b2a76b9719d911017c592") {
@@ -38,46 +19,9 @@ if (md5("hello") != "5d41402abc4b2a76b9719d911017c592") {
   }
 }
 
-function sto(val) {
-  LS.setItem("magic", val);
-}
 
-function ret() {
-  let t = LS.getItem("magic");
-  if (t != null && t == md5(st2hx(tday))) {
-    return t;
-  } else {
-    return "";
-  }
-}
 
-function recall() {
-  user = ret();
-  if (chk(user)) {
-    loaddata();
-  } else {
-    openPWS();
-  }
-}
 
-function chkkey(e) {
-  if (e.key === "Enter") {
-    validate();
-  }
-}
-
-function validate() {
-  user = document.getElementById("psw").value;
-  if (null == user || "" == user) recall();
-  if (chk(user)) {
-    sto(user);
-    closePWS();
-    loaddata();
-  } else {
-    closePWS();
-    nodata();
-  }
-}
 
 function inIframe() {
   try {
@@ -99,31 +43,22 @@ function nodata() {
 }
 
 function loaddata() {
-  if (chk(user)) {
-    menu = []; // Clear global menu
-    fetch("./data.json")
-      .then((response) => response.json())
-      .then((json) => save(json));
-  } else {
-    recall();
-  }
+  menu = []; // Clear global menu
+  fetch("./data.json")
+    .then((response) => response.json())
+    .then((json) => save(json));
 }
 
 function save(json) {
-  if (chk(user)) {
-    closePWS(); // Ensure lock screen is hidden
-    jsonD = json;
-    let w = window.innerWidth;
-    if (w >= 2215) process(jsonD, 24);
-    else if (w >= 1845) process(jsonD, 15);
-    else if (w >= 1480) process(jsonD, 12);
-    else process(jsonD, 6);
+  jsonD = json;
+  let w = window.innerWidth;
+  if (w >= 2215) process(jsonD, 24);
+  else if (w >= 1845) process(jsonD, 15);
+  else if (w >= 1480) process(jsonD, 12);
+  else process(jsonD, 6);
 
-    timebar(jsonD);
-    navbar();
-  } else {
-    recall();
-  }
+  timebar(jsonD);
+  navbar();
 }
 
 function timebar(json) {
@@ -209,7 +144,6 @@ function navbar() {
           <div class="buttons field is-grouped mb-0">
             <div class="control"><a class="button is-small is-info is-light" href="../">Links</a></div>
             <div class="control"><a class="button is-small is-primary is-light" href="javascript:location.reload()">Reload</a></div>
-            <div class="control"><a class="button is-small is-danger is-light" href="javascript:LS.clear();location.reload()">Logout</a></div>
           </div>
         </div>
       </div>
@@ -260,48 +194,4 @@ function addli(data) {
   if (mn) mn.innerHTML += data;
 }
 
-function openPWS() {
-  document.getElementById("pswinput").style.display = "flex";
-  const nav = document.getElementById("navigate");
-  if (nav) nav.style.display = "none";
-  if (!intv) {
-    intv = setInterval(function () {
-      lc = Math.random(); // Only randomize when screen is open
-      rain();
-    }, 20);
-  }
-}
 
-function closePWS() {
-  document.getElementById("pswinput").style.display = "none";
-  if (intv) {
-    clearInterval(intv);
-    intv = null;
-  }
-}
-
-function randomText() {
-  var text = "!@#$%^*()";
-  return text[Math.floor(Math.random() * text.length)];
-}
-
-function rain() {
-  let cloud = document.querySelector(".cloud");
-  if (!cloud) return;
-  let e = document.createElement("div");
-  e.classList.add("drop");
-  cloud.appendChild(e);
-
-  let left = Math.floor(Math.random() * 300);
-  let size = Math.random() * 1.5;
-  let duration = Math.random() * 1;
-
-  e.innerText = randomText();
-  e.style.left = left + "px";
-  e.style.fontSize = 0.5 + size + "em";
-  e.style.animationDuration = 1 + duration + "s";
-
-  setTimeout(function () {
-    if (e.parentNode) cloud.removeChild(e);
-  }, 2000);
-}
