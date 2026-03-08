@@ -310,6 +310,34 @@ function nextVideo() {
   }
 }
 
+function toggleFullscreen() {
+  const container = document.querySelector('.video-container');
+  if (!document.fullscreenElement) {
+    if (container.requestFullscreen) {
+      container.requestFullscreen();
+    } else if (container.webkitRequestFullscreen) {
+      container.webkitRequestFullscreen();
+    } else if (container.msRequestFullscreen) {
+      container.msRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+}
+
+function updateFullscreenButton() {
+  const btn = document.getElementById('fullscreenBtn');
+  if (btn) {
+    btn.innerHTML = document.fullscreenElement ? '&#x2716;' : '&#x26F6;';
+  }
+}
+
 // Video player event listeners
 document.addEventListener("DOMContentLoaded", function() {
   const player = document.getElementById("videoPlayer");
@@ -319,7 +347,11 @@ document.addEventListener("DOMContentLoaded", function() {
     player.addEventListener("ended", function() {
       document.getElementById("playIcon").innerHTML = "&#9658;";
     });
+    player.addEventListener("dblclick", toggleFullscreen);
   }
+  
+  document.addEventListener("fullscreenchange", updateFullscreenButton);
+  document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
   
   // Keyboard shortcuts
   document.addEventListener("keydown", function(e) {
@@ -343,6 +375,10 @@ document.addEventListener("DOMContentLoaded", function() {
       case "m":
       case "M":
         toggleMute();
+        break;
+      case "f":
+      case "F":
+        toggleFullscreen();
         break;
     }
   });
