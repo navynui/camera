@@ -1,5 +1,8 @@
 var jsonD = [],
-  menu = [];
+  menu = [],
+  jsonD_filtered = null,
+  currentVideoIndex = -1,
+  currentVideoList = [];
 var LS = localStorage;
 // Manual YYYY-MM-DD to avoid any locale/timezone weirdness
 var d = new Date();
@@ -63,7 +66,7 @@ function loadMore() {
       <div class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet">
         <div class="card">
           <div class="card-image">
-            <a href="${vid}">
+            <a href="javascript:void(0)" onclick="openVideoModal(${i})">
               <figure class="image is-16by9">
                 <img src="${thm}" alt="Thumbnail" style="object-fit: cover;">
               </figure>
@@ -172,16 +175,10 @@ function choose(d, h) {
     let dt = new Date(obj.dt);
     return dt.getHours() == h && dt.getDate() == d;
   });
-  // Note: Infinity scroll is primarily for "All" view. 
-  // For filtered view, we can just render everything or still use loadMore.
-  // Let's make choose reset the current view to the filtered set.
   jsonD_filtered = filterJ;
-  // To keep it simple, I'll temporarily swap jsonD and restore it? 
-  // No, let's just render the filtered set directly since it's usually small.
   let mn = document.getElementById("main");
   if (mn) mn.innerHTML = "";
 
-  // Reuse process logic for simple filtered view
   for (let i = filterJ.length - 1; i >= 0; i--) {
     let item = filterJ[i];
     let thm = "thumbs/aqara_video/" + item.camera + "/" + item.path + ".png";
@@ -190,7 +187,7 @@ function choose(d, h) {
       <div class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet">
         <div class="card">
           <div class="card-image">
-            <a href="${vid}">
+            <a href="javascript:void(0)" onclick="openVideoModal(${i})">
               <figure class="image is-16by9">
                 <img src="${thm}" alt="Thumbnail" style="object-fit: cover;">
               </figure>
@@ -211,5 +208,144 @@ function addli(data) {
   let mn = document.getElementById("main");
   if (mn) mn.innerHTML += data;
 }
+
+// Video Modal Functions
+function openVideoModal(index) {
+  const data = jsonD_filtered || jsonD;
+  currentVideoIndex = index;
+  currentVideoList = data;
+  
+  const item = data[index];
+  const videoSrc = "files/aqara_video/" + item.camera + "/" + item.path + ".mp4";
+  
+  const modal = document.getElementById("videoModal");
+  const player = document.getElementById("videoPlayer");
+  
+  player.src = videoSrc;
+  modal.classList.add("is-active");
+  
+  player.play().catch(() => {});
+  
+  updateTimeDisplay();
+}
+
+function closeVideoModal() {
+  const modal = document.getElementById("videoModal");
+  const player = document.getElementById("videoPlayer");
+  
+  player.pause();
+  player.src = "";
+  modal.classList.remove("is-active");
+}
+
+function togglePlay() {
+  const player = document.getElementById("videoPlayer");
+  const icon = document.getElementById("playIcon");
+  
+  if (player.paused) {
+    player.play();
+    icon.innerHTML = "&#10074;&#10074;";
+  } else {
+    player.pause();
+    icon.innerHTML = "&#9658;";
+  }
+}
+
+function toggleMute() {
+  const player = document.getElementById("videoPlayer");
+  const icon = document.getElementById("volumeIcon");
+  
+  player.muted = !player.muted;
+  icon.innerHTML = player.muted ? "&#128263;" : "&#128266;";
+}
+
+function setVolume() {
+  const player = document.getElementById("videoPlayer");
+  const slider = document.getElementById("volumeSlider");
+  player.volume = slider.value;
+}
+
+function seekVideo() {
+  const player = document.getElementById("videoPlayer");
+  const slider = document.getElementById("progressBar");
+  player.currentTime = slider.value;
+}
+
+function updateTimeDisplay() {
+  const player = document.getElementById("videoPlayer");
+  const progress = document.getElementById("progressBar");
+  const timeDisplay = document.getElementById("timeDisplay");
+  const playIcon = document.getElementById("playIcon");
+  
+  if (!player.src) return;
+  
+  const current = formatTime(player.currentTime);
+  const duration = formatTime(player.duration || 0);
+  timeDisplay.textContent = current + " / " + duration;
+  
+  if (!isNaN(player.duration)) {
+    progress.max = player.duration;
+    progress.value = player.currentTime;
+  }
+  
+  playIcon.innerHTML = player.paused ? "&#9658;" : "&#10074;&#10074;";
+}
+
+function formatTime(seconds) {
+  if (isNaN(seconds)) return "0:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return m + ":" + s.toString().padStart(2, '0');
+}
+
+function prevVideo() {
+  if (currentVideoIndex > 0) {
+    openVideoModal(currentVideoIndex - 1);
+  }
+}
+
+function nextVideo() {
+  if (currentVideoIndex < currentVideoList.length - 1) {
+    openVideoModal(currentVideoIndex + 1);
+  }
+}
+
+// Video player event listeners
+document.addEventListener("DOMContentLoaded", function() {
+  const player = document.getElementById("videoPlayer");
+  if (player) {
+    player.addEventListener("timeupdate", updateTimeDisplay);
+    player.addEventListener("loadedmetadata", updateTimeDisplay);
+    player.addEventListener("ended", function() {
+      document.getElementById("playIcon").innerHTML = "&#9658;";
+    });
+  }
+  
+  // Keyboard shortcuts
+  document.addEventListener("keydown", function(e) {
+    const modal = document.getElementById("videoModal");
+    if (!modal.classList.contains("is-active")) return;
+    
+    switch(e.key) {
+      case " ":
+        e.preventDefault();
+        togglePlay();
+        break;
+      case "ArrowLeft":
+        prevVideo();
+        break;
+      case "ArrowRight":
+        nextVideo();
+        break;
+      case "Escape":
+        closeVideoModal();
+        break;
+      case "m":
+      case "M":
+        toggleMute();
+        break;
+    }
+  });
+});
 
 
