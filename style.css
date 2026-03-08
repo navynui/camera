@@ -250,21 +250,48 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
 }
 
 .video-container:fullscreen video,
 .video-container:-webkit-full-screen video,
 .video-container:-ms-fullscreen video {
-  max-width: 100%;
-  max-height: calc(100vh - 60px);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .video-container:fullscreen .video-controls,
 .video-container:-webkit-full-screen .video-controls,
 .video-container:-ms-fullscreen .video-controls {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 800px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.video-container:fullscreen:hover .video-controls,
+.video-container:fullscreen .video-controls.visible,
+.video-container:-webkit-full-screen:hover .video-controls,
+.video-container:-webkit-full-screen .video-controls.visible,
+.video-container:-ms-fullscreen:hover .video-controls,
+.video-container:-ms-fullscreen .video-controls.visible {
+  opacity: 1;
+}
+
+.video-container:fullscreen .video-controls.always-visible,
+.video-container:-webkit-full-screen .video-controls.always-visible,
+.video-container:-ms-fullscreen .video-controls.always-visible {
+  opacity: 1;
 }

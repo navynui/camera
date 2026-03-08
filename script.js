@@ -227,6 +227,10 @@ function openVideoModal(index) {
   player.play().catch(() => {});
   
   updateTimeDisplay();
+  
+  if (document.fullscreenElement) {
+    showControls();
+  }
 }
 
 function closeVideoModal() {
@@ -336,6 +340,29 @@ function updateFullscreenButton() {
   if (btn) {
     btn.innerHTML = document.fullscreenElement ? '&#x2716;' : '&#x26F6;';
   }
+  
+  const controls = document.querySelector('.video-controls');
+  if (controls) {
+    if (document.fullscreenElement) {
+      controls.classList.add('always-visible');
+      showControls();
+    } else {
+      controls.classList.remove('always-visible');
+      controls.style.opacity = '';
+    }
+  }
+}
+
+let controlsTimeout;
+function showControls() {
+  const controls = document.querySelector('.video-controls');
+  if (!controls || !document.fullscreenElement) return;
+  
+  controls.style.opacity = '1';
+  clearTimeout(controlsTimeout);
+  controlsTimeout = setTimeout(() => {
+    controls.style.opacity = '0';
+  }, 3000);
 }
 
 // Video player event listeners
@@ -352,6 +379,11 @@ document.addEventListener("DOMContentLoaded", function() {
   
   document.addEventListener("fullscreenchange", updateFullscreenButton);
   document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
+  
+  const container = document.querySelector('.video-container');
+  if (container) {
+    container.addEventListener('mousemove', showControls);
+  }
   
   // Keyboard shortcuts
   document.addEventListener("keydown", function(e) {
