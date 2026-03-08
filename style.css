@@ -246,10 +246,6 @@ body {
   background: #000;
   width: 100vw;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -261,14 +257,27 @@ body {
 .video-container:fullscreen video,
 .video-container:-webkit-full-screen video,
 .video-container:-ms-fullscreen video {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: cover;
 }
 
 .video-container:fullscreen.video-fit-contain video,
 .video-container:-webkit-full-screen.video-fit-contain video,
 .video-container:-ms-fullscreen.video-fit-contain video {
+  transform: translate(-50%, -50%);
+  min-width: 0;
+  min-height: 0;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
 }
 
