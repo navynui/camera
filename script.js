@@ -383,7 +383,10 @@ document.addEventListener("DOMContentLoaded", function() {
     player.addEventListener("ended", function() {
       document.getElementById("playIcon").innerHTML = "&#9658;";
     });
-    player.addEventListener("dblclick", toggleFullscreen);
+    player.addEventListener("dblclick", function(e) {
+      e.preventDefault();
+      toggleFullscreen();
+    });
   }
   
   document.addEventListener("fullscreenchange", updateFullscreenButton);
