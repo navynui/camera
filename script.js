@@ -335,6 +335,15 @@ function toggleFullscreen() {
   }
 }
 
+function toggleFit() {
+  const container = document.querySelector('.video-container');
+  container.classList.toggle('video-fit-contain');
+  const btn = document.getElementById('fitBtn');
+  if (btn) {
+    btn.innerHTML = container.classList.contains('video-fit-contain') ? '&#x1F4F7;' : '&#x1F5BC;';
+  }
+}
+
 function updateFullscreenButton() {
   const btn = document.getElementById('fullscreenBtn');
   if (btn) {
@@ -411,6 +420,10 @@ document.addEventListener("DOMContentLoaded", function() {
       case "f":
       case "F":
         toggleFullscreen();
+        break;
+      case "c":
+      case "C":
+        toggleFit();
         break;
     }
   });

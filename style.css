@@ -263,6 +263,12 @@ body {
 .video-container:-ms-fullscreen video {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.video-container:fullscreen.video-fit-contain video,
+.video-container:-webkit-full-screen.video-fit-contain video,
+.video-container:-ms-fullscreen.video-fit-contain video {
   object-fit: contain;
 }
 
