@@ -136,23 +136,33 @@ body {
 }
 
 .modal-content {
-  max-width: 90vw;
-  max-height: 90vh;
-  width: auto;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  background: #000;
 }
 
 .video-container {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   background: #000;
-  border-radius: 8px;
+  position: relative;
   overflow: hidden;
 }
 
 .video-container video {
-  display: block;
-  max-height: 80vh;
   max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   cursor: pointer;
+  z-index: 1;
 }
 
 .version-tag {
@@ -166,24 +176,28 @@ body {
 .video-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  justify-content: center;
+  gap: 12px;
+  padding: 15px 25px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 800px;
+  z-index: 10;
+  transition: opacity 0.3s;
 }
 
-.control-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 6px;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+@media (pointer: coarse) {
+  .video-controls {
+    bottom: 20px;
+    padding: 10px 15px;
+    gap: 8px;
+  }
 }
 
 .control-btn:hover {
@@ -250,64 +264,7 @@ body {
   }
 }
 
-/* Fullscreen styles */
-.video-container:fullscreen,
-.video-container:-webkit-full-screen,
-.video-container:-moz-full-screen,
-.video-container:-ms-fullscreen {
-  background: #000 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.video-container:fullscreen video,
-.video-container:-webkit-full-screen video,
-.video-container:-moz-full-screen video,
-.video-container:-ms-fullscreen video {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  width: auto !important;
-  height: auto !important;
-  object-fit: contain !important;
-  margin: 0 !important;
-  z-index: 1 !important;
-}
-
-/* video-fit-contain is now handled by default fullscreen styles */
-
-.video-container:fullscreen .video-controls,
-.video-container:-webkit-full-screen .video-controls,
-.video-container:-ms-fullscreen .video-controls {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  max-width: 800px;
-  background: rgba(0, 0, 0, 0.85);
-  border-radius: 50px;
-  padding: 10px 30px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  z-index: 10;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.video-container:fullscreen:hover .video-controls,
-.video-container:fullscreen .video-controls.visible,
-.video-container:-webkit-full-screen:hover .video-controls,
-.video-container:-webkit-full-screen .video-controls.visible,
-.video-container:-ms-fullscreen:hover .video-controls,
-.video-container:-ms-fullscreen .video-controls.visible {
-  opacity: 1;
-}
+/* Cleaned up old fullscreen rules - now handled by default modal styles */
 
 .video-container:fullscreen .video-controls.always-visible,
 .video-container:-webkit-full-screen .video-controls.always-visible,
