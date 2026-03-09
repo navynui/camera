@@ -165,13 +165,7 @@ body {
   z-index: 1;
 }
 
-.version-tag {
-  font-size: 10px;
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  opacity: 0.3;
-}
+/* Version tag removed */
 
 .video-controls {
   display: flex;
