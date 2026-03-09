@@ -1,4 +1,4 @@
-const CACHE_NAME = 'camview-v3';
+const CACHE_NAME = 'camview-v4';
 
 // Passive service worker - just enough to trigger PWA installation
 self.addEventListener('install', (event) => {

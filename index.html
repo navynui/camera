@@ -16,20 +16,34 @@
   <link rel="apple-touch-icon" href="icon.svg">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css">
-  <link href="style.css?v=mobile_v12" rel="stylesheet" />
-  <script type="text/javascript" src="script.js?v=mobile_v12"></script>
+  <link href="style.css?v=mobile_v13" rel="stylesheet" />
+  <script type="text/javascript" src="script.js?v=mobile_v13"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW registered'))
+          .then(reg => {
+            console.log('SW registered');
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  window.location.reload();
+                }
+              };
+            };
+          })
           .catch(err => console.log('SW error:', err));
+      });
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
       });
     }
   </script>
 
 <body class="has-navbar-fixed-top" onload="loaddata()">
   <nav id="navigate" class="navbar is-fixed-top is-dark px-4" role="navigation" aria-label="main navigation"></nav>
+  <span class="version-tag">v13</span>
 
   <section class="section media-container">
     <div class="container is-fluid">
