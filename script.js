@@ -303,14 +303,14 @@ function formatTime(seconds) {
 }
 
 function prevVideo() {
-  if (currentVideoIndex > 0) {
-    openVideoModal(currentVideoIndex - 1);
+  if (currentVideoIndex < currentVideoList.length - 1) {
+    openVideoModal(currentVideoIndex + 1);
   }
 }
 
 function nextVideo() {
-  if (currentVideoIndex < currentVideoList.length - 1) {
-    openVideoModal(currentVideoIndex + 1);
+  if (currentVideoIndex > 0) {
+    openVideoModal(currentVideoIndex - 1);
   }
 }
 
